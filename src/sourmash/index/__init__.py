@@ -6,7 +6,7 @@ from abc import abstractmethod, ABC
 from collections import namedtuple, Counter
 import zipfile
 
-from .search import make_jaccard_search_query, make_gather_query
+from ..search import make_jaccard_search_query, make_gather_query
 
 # generic return tuple for Index.search and Index.gather
 IndexSearchResult = namedtuple('Result', 'score, signature, location')
@@ -349,13 +349,13 @@ class LinearIndex(Index):
         self._signatures.append(node)
 
     def save(self, path):
-        from .signature import save_signatures
+        from ..signature import save_signatures
         with open(path, 'wt') as fp:
             save_signatures(self.signatures(), fp)
 
     @classmethod
     def load(cls, location):
-        from .signature import load_signatures
+        from ..signature import load_signatures
         si = load_signatures(location, do_raise=True)
 
         lidx = LinearIndex(si, filename=location)
@@ -483,7 +483,7 @@ class ZipFileLinearIndex(Index):
 
     def signatures(self):
         "Load all signatures in the zip file."
-        from .signature import load_signatures
+        from ..signature import load_signatures
         for zipinfo in self.zf.infolist():
             # should we load this file? if it ends in .sig OR we are forcing:
             if zipinfo.filename.endswith('.sig') or \
@@ -701,7 +701,7 @@ class MultiIndex(Index):
     @classmethod
     def load_from_path(cls, pathname, force=False):
         "Create a MultiIndex from a path (filename or directory)."
-        from .sourmash_args import traverse_find_sigs
+        from ..sourmash_args import traverse_find_sigs
         if not os.path.exists(pathname): # CTB consider changing to isdir.
             raise ValueError(f"'{pathname}' must be a directory")
 
@@ -729,7 +729,7 @@ class MultiIndex(Index):
     @classmethod
     def load_from_pathlist(cls, filename):
         "Create a MultiIndex from all files listed in a text file."
-        from .sourmash_args import (load_pathlist_from_file,
+        from ..sourmash_args import (load_pathlist_from_file,
                                     load_file_as_index)
         idx_list = []
         src_list = []

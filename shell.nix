@@ -19,6 +19,9 @@ in
       cargo-limit
       wasmtime
       wasm-pack
+      cargo-watch
+      cargo-limit
+      rust-cbindgen
     ];
 
     shellHook = ''
